@@ -24,7 +24,7 @@ typedef enum{
 @property (nonatomic, retain) IBOutlet UIScrollView *scrollView;
 @property (nonatomic, retain) IBOutlet UITextView *textView;
 @property (nonatomic, retain) NSMutableArray *arrayOfImageViews;
-@property (nonatomic, assign) NSArray *taggedImagesInfoArray;
+@property (nonatomic, retain) NSArray *taggedImagesInfoArray;
 @property (nonatomic) NSInteger scrollViewCenterIndex;
 
 @end

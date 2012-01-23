@@ -108,6 +108,7 @@
 
 -(void)setTaggedImagesInfoArray:(NSArray *)_taggedImagesInfoArray{
     if(taggedImagesInfoArray == _taggedImagesInfoArray) return;
+    [taggedImagesInfoArray autorelease];
     taggedImagesInfoArray = [_taggedImagesInfoArray retain];
     int count = taggedImagesInfoArray.count;
     [scrollView setContentSize:CGSizeMake(count * scrollView.frame.size.width, scrollView.frame.size.height)];
