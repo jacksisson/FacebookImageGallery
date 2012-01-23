@@ -7,72 +7,100 @@
 //
 
 #import "JSAppDelegate.h"
-
-#import "JSViewController.h"
+#import "FBThumbGalleryViewController.h"
+#import "Defines.h"
+#import "FBLoginViewController.h"
 
 @implementation JSAppDelegate
 
-@synthesize window = _window;
-@synthesize viewController = _viewController;
+@synthesize window;
+@synthesize navController;
+@synthesize facebook;
 
+#pragma mark - Launch and Memory
 - (void)dealloc
 {
-    [_window release];
-    [_viewController release];
+    [window release];
+    [navController release];
+    [facebook release];
     [super dealloc];
 }
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+    //Init View Controller with appropriate nib
+    FBThumbGalleryViewController *rootViewController = [[FBThumbGalleryViewController alloc] initWithNibName:@"FBThumbGalleryViewController_iPhone" bundle:nil];
+    
+    //Create Nav Controller with the above view controller as root
+    UINavigationController *localNavController = [[UINavigationController alloc] initWithRootViewController:rootViewController];
+    self.navController = localNavController;
+    [localNavController release];
+    [rootViewController release];
+    
+    //Create Window
     self.window = [[[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]] autorelease];
-    // Override point for customization after application launch.
-    if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) {
-        self.viewController = [[[JSViewController alloc] initWithNibName:@"JSViewController_iPhone" bundle:nil] autorelease];
-    } else {
-        self.viewController = [[[JSViewController alloc] initWithNibName:@"JSViewController_iPad" bundle:nil] autorelease];
-    }
-    self.window.rootViewController = self.viewController;
+    self.window.rootViewController = self.navController;
     [self.window makeKeyAndVisible];
+    
+    //Additional App Setup
+    [self setupFacebook];
+
     return YES;
 }
 
-- (void)applicationWillResignActive:(UIApplication *)application
-{
-    /*
-     Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
-     Use this method to pause ongoing tasks, disable timers, and throttle down OpenGL ES frame rates. Games should use this method to pause the game.
-     */
+#pragma mark - Facebook
+-(void)setupFacebook{
+    
+    //Load Facebook object, and autohrize if necessary
+    facebook = [[Facebook alloc] initWithAppId:FACEBOOK_APP_ID andDelegate:self];
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    if ([defaults objectForKey:@"FBAccessTokenKey"] 
+        && [defaults objectForKey:@"FBExpirationDateKey"]) {
+        facebook.accessToken = [defaults objectForKey:@"FBAccessTokenKey"];
+        facebook.expirationDate = [defaults objectForKey:@"FBExpirationDateKey"];
+    }
+    if (![facebook isSessionValid]) {
+        FBLoginViewController *loginVC = [[FBLoginViewController alloc] init];
+        loginVC.delegate = self;
+        [navController presentModalViewController:loginVC animated:NO];
+        [loginVC release];
+    }else{
+        [self startLoadRequestInMainViewController];
+    }
 }
 
-- (void)applicationDidEnterBackground:(UIApplication *)application
-{
-    /*
-     Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later. 
-     If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
-     */
+#pragma mark - Facebook overrides for openURL methods
+
+// Pre 4.2 support
+- (BOOL)application:(UIApplication *)application handleOpenURL:(NSURL *)url {
+    return [facebook handleOpenURL:url]; 
 }
 
-- (void)applicationWillEnterForeground:(UIApplication *)application
-{
-    /*
-     Called as part of the transition from the background to the inactive state; here you can undo many of the changes made on entering the background.
-     */
+// For 4.2+ support
+- (BOOL)application:(UIApplication *)application openURL:(NSURL *)url
+  sourceApplication:(NSString *)sourceApplication annotation:(id)annotation {
+    return [facebook handleOpenURL:url]; 
 }
 
-- (void)applicationDidBecomeActive:(UIApplication *)application
-{
-    /*
-     Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
-     */
+#pragma mark - Facebook Session Delegate
+- (void)fbDidLogin {
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    [defaults setObject:[facebook accessToken] forKey:@"FBAccessTokenKey"];
+    [defaults setObject:[facebook expirationDate] forKey:@"FBExpirationDateKey"];
+    [defaults synchronize];
+    [self startLoadRequestInMainViewController];
 }
 
-- (void)applicationWillTerminate:(UIApplication *)application
-{
-    /*
-     Called when the application is about to terminate.
-     Save data if appropriate.
-     See also applicationDidEnterBackground:.
-     */
+-(void)startLoadRequestInMainViewController{
+    FBThumbGalleryViewController *viewController = [[navController viewControllers] objectAtIndex:0];
+    [viewController getFirstTaggedPhotosFromFacebook];
+}
+
+#pragma mark - FBLoginDelegate
+-(void)loginViewControllerDidRequestLogin:(FBLoginViewController *)loginVC{
+    NSArray *permissions = [NSArray arrayWithObjects:@"user_photo_video_tags", nil];
+    [facebook authorize:permissions];
+    [navController dismissModalViewControllerAnimated:YES];
 }
 
 @end
