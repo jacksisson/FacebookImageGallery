@@ -24,6 +24,14 @@
     [imageView4 release];
 }
 
+#pragma mark - methods
+-(void)clearAllImageViews{
+    self.imageView1.image = nil;
+    self.imageView2.image = nil;
+    self.imageView3.image = nil;
+    self.imageView4.image = nil;
+}
+
 #pragma mark - touches
 -(void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event{
     [super touchesBegan:touches withEvent:event];

@@ -13,12 +13,14 @@
 		A85457B714CC671900267A2B /* FBLoginViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = A85457B514CC671900267A2B /* FBLoginViewController.xib */; };
 		A85457C114CC6A8500267A2B /* FBImageTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = A85457C014CC6A8500267A2B /* FBImageTableViewCell.m */; };
 		A85457C314CC6CD700267A2B /* FBImageTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = A85457C214CC6CD700267A2B /* FBImageTableViewCell.xib */; };
+		A86AB48214CE5B2F00E117E1 /* FBActivityTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = A86AB48114CE5B2F00E117E1 /* FBActivityTableViewCell.xib */; };
+		A86AB48614CE64DB00E117E1 /* FBImageInfoRequestor.m in Sources */ = {isa = PBXBuildFile; fileRef = A86AB48514CE64DB00E117E1 /* FBImageInfoRequestor.m */; };
 		A888D58314C921350024FA2B /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A888D58214C921350024FA2B /* UIKit.framework */; };
 		A888D58514C921350024FA2B /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A888D58414C921350024FA2B /* Foundation.framework */; };
 		A888D58714C921350024FA2B /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A888D58614C921350024FA2B /* CoreGraphics.framework */; };
 		A888D58D14C921350024FA2B /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = A888D58B14C921350024FA2B /* InfoPlist.strings */; };
 		A888D58F14C921350024FA2B /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = A888D58E14C921350024FA2B /* main.m */; };
-		A888D59314C921350024FA2B /* JSAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = A888D59214C921350024FA2B /* JSAppDelegate.m */; };
+		A888D59314C921350024FA2B /* FacebookImageGalleryAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = A888D59214C921350024FA2B /* FacebookImageGalleryAppDelegate.m */; };
 		A888D59614C921350024FA2B /* FBThumbGalleryViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A888D59514C921350024FA2B /* FBThumbGalleryViewController.m */; };
 		A888D59914C921350024FA2B /* FBThumbGalleryViewController_iPhone.xib in Resources */ = {isa = PBXBuildFile; fileRef = A888D59714C921350024FA2B /* FBThumbGalleryViewController_iPhone.xib */; };
 		A888D5C614C922550024FA2B /* Facebook.m in Sources */ = {isa = PBXBuildFile; fileRef = A888D5AB14C922550024FA2B /* Facebook.m */; };
@@ -58,6 +60,9 @@
 		A85457BF14CC6A8500267A2B /* FBImageTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FBImageTableViewCell.h; sourceTree = "<group>"; };
 		A85457C014CC6A8500267A2B /* FBImageTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBImageTableViewCell.m; sourceTree = "<group>"; };
 		A85457C214CC6CD700267A2B /* FBImageTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = FBImageTableViewCell.xib; sourceTree = "<group>"; };
+		A86AB48114CE5B2F00E117E1 /* FBActivityTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = FBActivityTableViewCell.xib; sourceTree = "<group>"; };
+		A86AB48414CE64DB00E117E1 /* FBImageInfoRequestor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FBImageInfoRequestor.h; sourceTree = "<group>"; };
+		A86AB48514CE64DB00E117E1 /* FBImageInfoRequestor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBImageInfoRequestor.m; sourceTree = "<group>"; };
 		A888D57E14C921350024FA2B /* FacebookImageGallery.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FacebookImageGallery.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A888D58214C921350024FA2B /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		A888D58414C921350024FA2B /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -66,8 +71,8 @@
 		A888D58C14C921350024FA2B /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		A888D58E14C921350024FA2B /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		A888D59014C921350024FA2B /* FacebookImageGallery-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "FacebookImageGallery-Prefix.pch"; sourceTree = "<group>"; };
-		A888D59114C921350024FA2B /* JSAppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = JSAppDelegate.h; sourceTree = "<group>"; };
-		A888D59214C921350024FA2B /* JSAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = JSAppDelegate.m; sourceTree = "<group>"; };
+		A888D59114C921350024FA2B /* FacebookImageGalleryAppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FacebookImageGalleryAppDelegate.h; sourceTree = "<group>"; };
+		A888D59214C921350024FA2B /* FacebookImageGalleryAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FacebookImageGalleryAppDelegate.m; sourceTree = "<group>"; };
 		A888D59414C921350024FA2B /* FBThumbGalleryViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FBThumbGalleryViewController.h; sourceTree = "<group>"; };
 		A888D59514C921350024FA2B /* FBThumbGalleryViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FBThumbGalleryViewController.m; sourceTree = "<group>"; };
 		A888D59814C921350024FA2B /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/FBThumbGalleryViewController_iPhone.xib; sourceTree = "<group>"; };
@@ -152,8 +157,8 @@
 		A85457BA14CC68C300267A2B /* App Delegate */ = {
 			isa = PBXGroup;
 			children = (
-				A888D59114C921350024FA2B /* JSAppDelegate.h */,
-				A888D59214C921350024FA2B /* JSAppDelegate.m */,
+				A888D59114C921350024FA2B /* FacebookImageGalleryAppDelegate.h */,
+				A888D59214C921350024FA2B /* FacebookImageGalleryAppDelegate.m */,
 			);
 			name = "App Delegate";
 			sourceTree = "<group>";
@@ -164,8 +169,18 @@
 				A85457BF14CC6A8500267A2B /* FBImageTableViewCell.h */,
 				A85457C014CC6A8500267A2B /* FBImageTableViewCell.m */,
 				A85457C214CC6CD700267A2B /* FBImageTableViewCell.xib */,
+				A86AB48114CE5B2F00E117E1 /* FBActivityTableViewCell.xib */,
 			);
 			name = FBImageTableViewCell;
+			sourceTree = "<group>";
+		};
+		A86AB48314CE604100E117E1 /* FBImageInfoRequestor */ = {
+			isa = PBXGroup;
+			children = (
+				A86AB48414CE64DB00E117E1 /* FBImageInfoRequestor.h */,
+				A86AB48514CE64DB00E117E1 /* FBImageInfoRequestor.m */,
+			);
+			name = FBImageInfoRequestor;
 			sourceTree = "<group>";
 		};
 		A888D57314C921350024FA2B = {
@@ -198,6 +213,7 @@
 		A888D58814C921350024FA2B /* FacebookImageGallery */ = {
 			isa = PBXGroup;
 			children = (
+				A86AB48314CE604100E117E1 /* FBImageInfoRequestor */,
 				A85457BA14CC68C300267A2B /* App Delegate */,
 				A85457B914CC68A600267A2B /* FBLoginViewController */,
 				A85457B814CC687900267A2B /* FBThumbGalleryViewController */,
@@ -361,6 +377,7 @@
 				A85457C314CC6CD700267A2B /* FBImageTableViewCell.xib in Resources */,
 				A8ED107B14CCE7A900873C8F /* MISSING_IMAGE.png in Resources */,
 				A8ED108114CCF2A000873C8F /* FBDetailViewController.xib in Resources */,
+				A86AB48214CE5B2F00E117E1 /* FBActivityTableViewCell.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -372,7 +389,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				A888D58F14C921350024FA2B /* main.m in Sources */,
-				A888D59314C921350024FA2B /* JSAppDelegate.m in Sources */,
+				A888D59314C921350024FA2B /* FacebookImageGalleryAppDelegate.m in Sources */,
 				A888D59614C921350024FA2B /* FBThumbGalleryViewController.m in Sources */,
 				A888D5C614C922550024FA2B /* Facebook.m in Sources */,
 				A888D5C814C922550024FA2B /* FBDialog.m in Sources */,
@@ -389,6 +406,7 @@
 				A85457B614CC671900267A2B /* FBLoginViewController.m in Sources */,
 				A85457C114CC6A8500267A2B /* FBImageTableViewCell.m in Sources */,
 				A8ED108014CCF2A000873C8F /* FBDetailViewController.m in Sources */,
+				A86AB48614CE64DB00E117E1 /* FBImageInfoRequestor.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

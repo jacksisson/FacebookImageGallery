@@ -11,9 +11,12 @@
 
 @interface ImageViewPopulator : NSObject<ImageFetcherDelegate>{
     UIImageView *imageView;
+    ImageFetcher *imageFetcher;
 }
 
 @property (nonatomic, retain) UIImageView *imageView;
+@property (nonatomic, retain) ImageFetcher *imageFetcher;
+
 
 // Default Initializer
 -(id)initWithImageView:(UIImageView*)_imageView;

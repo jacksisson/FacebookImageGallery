@@ -6,16 +6,26 @@
 //  Copyright (c) 2012 __MyCompanyName__. All rights reserved.
 //
 
-#import "JSAppDelegate.h"
+#import "FacebookImageGalleryAppDelegate.h"
 #import "FBThumbGalleryViewController.h"
 #import "Defines.h"
 #import "FBLoginViewController.h"
+#import "FBImageInfoRequestor.h"
 
-@implementation JSAppDelegate
+@implementation FacebookImageGalleryAppDelegate
 
 @synthesize window;
 @synthesize navController;
 @synthesize facebook;
+
+// Fixed Xcodes error reporting
+void uncaughtExceptionHandler(NSException *exception);
+void uncaughtExceptionHandler(NSException *exception) {
+    NSLog(@"CRASH: %@", exception);
+    NSLog(@"Stack Trace: %@", [exception callStackSymbols]);
+    // Internal error reporting
+}
+
 
 #pragma mark - Launch and Memory
 - (void)dealloc
@@ -28,6 +38,8 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+    NSSetUncaughtExceptionHandler(&uncaughtExceptionHandler);
+    
     //Init View Controller with appropriate nib
     FBThumbGalleryViewController *rootViewController = [[FBThumbGalleryViewController alloc] initWithNibName:@"FBThumbGalleryViewController_iPhone" bundle:nil];
     
@@ -65,7 +77,7 @@
         [navController presentModalViewController:loginVC animated:NO];
         [loginVC release];
     }else{
-        [self startLoadRequestInMainViewController];
+        [[FBImageInfoRequestor sharedInstance] getFirstTaggedPhotosFromFacebook];
     }
 }
 
@@ -88,12 +100,7 @@
     [defaults setObject:[facebook accessToken] forKey:@"FBAccessTokenKey"];
     [defaults setObject:[facebook expirationDate] forKey:@"FBExpirationDateKey"];
     [defaults synchronize];
-    [self startLoadRequestInMainViewController];
-}
-
--(void)startLoadRequestInMainViewController{
-    FBThumbGalleryViewController *viewController = [[navController viewControllers] objectAtIndex:0];
-    [viewController getFirstTaggedPhotosFromFacebook];
+    [[FBImageInfoRequestor sharedInstance] getFirstTaggedPhotosFromFacebook];
 }
 
 #pragma mark - FBLoginDelegate

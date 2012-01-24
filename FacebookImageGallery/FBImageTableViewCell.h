@@ -33,6 +33,8 @@
 @property (nonatomic) NSInteger cellStartingIndex;
 @property (nonatomic, assign) id<FBImageTableViewCellDelegate> delegate;
 
+-(void)clearAllImageViews;
+
 @end
 
 @protocol FBImageTableViewCellDelegate <NSObject>

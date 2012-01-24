@@ -7,23 +7,28 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "Facebook.h"
 #import "FBImageTableViewCell.h"
 
-@interface FBThumbGalleryViewController : UIViewController<FBRequestDelegate, FBImageTableViewCellDelegate, UITableViewDataSource, UITableViewDelegate>{
+@interface FBThumbGalleryViewController : UIViewController<FBImageTableViewCellDelegate, UITableViewDataSource, UITableViewDelegate>{
     int currentOffset;
     UITableView *tableView;
-    NSMutableArray *taggedPhotosInfoArray;
+    UIView *loadingView;
+    UIView *failedView;
     FBImageTableViewCell *tmpCell;
     UINib *cellNib;
+    BOOL hasLoadedAllImages;
+    BOOL isCurrentlyLoadingImages;
 }
 
 @property (nonatomic, retain) IBOutlet UITableView *tableView;
-@property (nonatomic, retain) NSMutableArray *taggedPhotosInfoArray;
+@property (nonatomic, retain) IBOutlet UIView *loadingView;
+@property (nonatomic, retain) IBOutlet UIView *failedView;
+
 @property (nonatomic, retain) IBOutlet FBImageTableViewCell *tmpCell;
 @property (nonatomic, retain) UINib *cellNib;
 
+//IBActions
+-(IBAction)retryFacebookLoadButtonPressed:(id)sender;
 
--(void)getFirstTaggedPhotosFromFacebook;
 
 @end

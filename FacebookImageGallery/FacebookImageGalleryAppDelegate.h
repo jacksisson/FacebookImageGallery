@@ -12,7 +12,7 @@
 
 @class FBThumbGalleryViewController;
 
-@interface JSAppDelegate : UIResponder <UIApplicationDelegate, FBSessionDelegate, FBLoginViewControllerDelegate>{
+@interface FacebookImageGalleryAppDelegate : UIResponder <UIApplicationDelegate, FBSessionDelegate, FBLoginViewControllerDelegate>{
     Facebook *facebook;
 }
 
@@ -22,6 +22,5 @@
 @property (nonatomic, retain) Facebook *facebook;
 
 -(void)setupFacebook;
--(void)startLoadRequestInMainViewController;
 
 @end

@@ -32,6 +32,9 @@
 // with the path of the cached file. 
 -(void)fetchImageAtURLPath:(NSString*)urlPath;
 
+// Stop and force self-release of file fethcer
+-(void)stop;
+
 @end
 
 @protocol ImageFetcherDelegate <NSObject>

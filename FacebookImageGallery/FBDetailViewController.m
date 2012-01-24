@@ -8,8 +8,20 @@
 
 #import "FBDetailViewController.h"
 #import "ImageViewPopulator.h"
+#import <QuartzCore/QuartzCore.h>
+#import "FBImageInfoRequestor.h"
 
 @interface FBDetailViewController()
+
+//Notification Selectors
+-(void)imageRequestorGotMoreInfo:(NSNotification*)notification;
+-(void)imageRequestorFinishedGettingInfo:(NSNotification*)notification;
+
+// Scroll View Sizing
+-(void)setContentSizeForScrollViewBasedOnImageInfoArray;
+
+// Title Setting
+-(void)setTitleForNavItem;
 
 // Image Views
 -(void)loadImageViewsIntoScrollView;
@@ -21,20 +33,21 @@
 -(void)hideComments;
 @end
 
+
+
 @implementation FBDetailViewController
 
 @synthesize scrollView;
 @synthesize arrayOfImageViews;
-@synthesize taggedImagesInfoArray;
 @synthesize scrollViewCenterIndex;
 @synthesize textView;
+@synthesize hasFinishedLoading;
 
 #pragma mark - memory 
 -(void)dealloc{
     [super dealloc];
     [scrollView release];
     [arrayOfImageViews release];
-    [taggedImagesInfoArray release];
     [textView release];
 }
 
@@ -48,6 +61,16 @@
     self.arrayOfImageViews = [NSMutableArray array];
     self.scrollViewCenterIndex = scrollViewCenterIndex; // 
     [self loadImageViewsIntoScrollView];
+    [self setImageViewsForCenterIndex:scrollViewCenterIndex];
+    [self setContentSizeForScrollViewBasedOnImageInfoArray];
+    
+    // Text View Appearance
+    textView.layer.borderColor = [UIColor colorWithWhite:1.0 alpha:0.5].CGColor;
+    textView.layer.borderWidth = 3.0;
+    
+    // Notifications
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(imageRequestorGotMoreInfo:) name:IMAGE_REQUESTOR_GOT_MORE_INFO_NOTIFICATION object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(imageRequestorFinishedGettingInfo:) name:IMAGE_REQUESTOR_FINISHED_GETTING_INFO_NOTIFICATION object:nil];
 }
 
 - (void)viewDidUnload
@@ -63,6 +86,33 @@
 {
     // Return YES for supported orientations
     return (interfaceOrientation == UIInterfaceOrientationPortrait);
+}
+
+#pragma mark - Notifications
+-(void)imageRequestorGotMoreInfo:(NSNotification*)notification{
+    [self setContentSizeForScrollViewBasedOnImageInfoArray]; 
+}
+
+-(void)imageRequestorFinishedGettingInfo:(NSNotification*)notification{
+    self.hasFinishedLoading = YES;
+    [self setContentSizeForScrollViewBasedOnImageInfoArray];
+}
+
+#pragma mark - Scroll view Sizing
+-(void)setContentSizeForScrollViewBasedOnImageInfoArray{
+    int count = [FBImageInfoRequestor sharedInstance].taggedPhotosInfoArray.count;
+    [scrollView setContentSize:CGSizeMake(count * scrollView.frame.size.width, scrollView.frame.size.height)];
+//    int currentCenter = (int)scrollView.contentOffset.x / (int)scrollView.frame.size.height;
+//    [self setImageViewsForCenterIndex:currentCenter];
+    [self setTitleForNavItem];
+}
+
+#pragma mark - Title Setting
+-(void)setTitleForNavItem{
+    int count = [FBImageInfoRequestor sharedInstance].taggedPhotosInfoArray.count;
+    int currentCenter = (int)scrollView.contentOffset.x / (int)scrollView.frame.size.width;
+    self.title = [NSString stringWithFormat:@"Photo %d of %d%@", currentCenter+1, count, hasFinishedLoading?@"":@"+"];
+
 }
 
 #pragma mark - imageViews
@@ -81,14 +131,14 @@
 -(void)setImageViewsForCenterIndex:(NSInteger)centerIndex{
     // Populate the image views with the appropriate images
     CGRect scrollViewFrame = scrollView.bounds;
-    int actualCenterIndex = (centerIndex==0 ? 0 : (centerIndex==taggedImagesInfoArray.count-1 ? 2 : 1));
+    int actualCenterIndex = (centerIndex==0 ? 0 : (centerIndex==[FBImageInfoRequestor sharedInstance].taggedPhotosInfoArray.count-1 ? 2 : 1));
     for(int i = 0; i < 3; i++){
         UIImageView *imageView = [arrayOfImageViews objectAtIndex:i];
         CGRect imageFrame = scrollViewFrame;
         imageFrame.origin.x += (scrollViewFrame.size.width * (i-actualCenterIndex));
         imageView.frame = imageFrame;  
-        NSDictionary *dict = [taggedImagesInfoArray objectAtIndex:centerIndex + i - actualCenterIndex];
-        [self setImageForImageView:imageView withDictionary:dict imageType:i==actualCenterIndex?ImageTypeFullSize:ImageTypeThumb];
+        NSDictionary *dict = [[FBImageInfoRequestor sharedInstance].taggedPhotosInfoArray objectAtIndex:centerIndex + i - actualCenterIndex];
+        [self setImageForImageView:imageView withDictionary:dict imageType:i==actualCenterIndex?ImageTypeFullSize:ImageTypeFullSize];
     }
     
     [self showCommentsForIndex:centerIndex];
@@ -106,19 +156,11 @@
     [scrollView setContentOffset:CGPointMake(scrollViewCenterIndex * scrollView.frame.size.width, 0) animated:NO];
 }
 
--(void)setTaggedImagesInfoArray:(NSArray *)_taggedImagesInfoArray{
-    if(taggedImagesInfoArray == _taggedImagesInfoArray) return;
-    [taggedImagesInfoArray autorelease];
-    taggedImagesInfoArray = [_taggedImagesInfoArray retain];
-    int count = taggedImagesInfoArray.count;
-    [scrollView setContentSize:CGSizeMake(count * scrollView.frame.size.width, scrollView.frame.size.height)];
-    [self setImageViewsForCenterIndex:scrollViewCenterIndex];
-    self.title = [NSString stringWithFormat:@"Photo %d of %d", scrollViewCenterIndex, taggedImagesInfoArray.count];
-}
-
 #pragma mark - scroll view delegate
 
 -(void)scrollViewDidScroll:(UIScrollView *)_scrollView{    
+    NSArray *taggedImagesInfoArray = [FBImageInfoRequestor sharedInstance].taggedPhotosInfoArray;
+    
     CGRect scrollViewFrame = scrollView.bounds;
     scrollViewFrame.origin.x = 0;
     float startingPos = scrollViewCenterIndex * _scrollView.bounds.size.width;
@@ -160,6 +202,11 @@
     }else{
         return;
     }
+    
+    // If we are near the end of the scrollview, load more images if there are more to load
+    if(!hasFinishedLoading && scrollView.contentOffset.x > (scrollView.contentSize.width - 3 * scrollView.frame.size.width)){
+        [[FBImageInfoRequestor sharedInstance] getNextPageOfTaggedPhotosFromFacebook];
+    }
 }
 
 -(void)scrollViewWillBeginDragging:(UIScrollView *)scrollView{
@@ -167,6 +214,7 @@
 }
 
 -(void)scrollViewDidEndDecelerating:(UIScrollView *)_scrollView{
+    NSArray *taggedImagesInfoArray = [FBImageInfoRequestor sharedInstance].taggedPhotosInfoArray;
     
     //Load Higher quality image.
     int currentIndex = (int)scrollView.contentOffset.x / (int)scrollView.bounds.size.width;
@@ -177,14 +225,17 @@
     [self showCommentsForIndex:currentIndex];
     
     //Set title to reflect
-    self.title = [NSString stringWithFormat:@"Photo %d of %d", scrollViewCenterIndex + 1, taggedImagesInfoArray.count];
+    [self setTitleForNavItem];
 }
 
 #pragma mark - comments
 -(void)showCommentsForIndex:(int)index{
+    NSArray *taggedImagesInfoArray = [FBImageInfoRequestor sharedInstance].taggedPhotosInfoArray;
+    
     textView.alpha = 0.0;
     textView.hidden = NO;
-    NSDictionary *dict = [taggedImagesInfoArray objectAtIndex:scrollViewCenterIndex];
+
+    NSDictionary *dict = [taggedImagesInfoArray objectAtIndex:index];
     NSArray *commentsArray = [[dict objectForKey:@"comments"] objectForKey:@"data"];
     if(!commentsArray || commentsArray.count ==0 ){
         textView.text = @"No Comments.";

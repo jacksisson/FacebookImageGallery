@@ -11,6 +11,7 @@
 @implementation ImageViewPopulator
 
 @synthesize imageView;
+@synthesize imageFetcher;
 
 
 #pragma mark - memory
@@ -26,15 +27,18 @@
 -(void)dealloc{
     [super dealloc];
     [imageView release];
+    [imageFetcher stop];
+    [imageFetcher release];
 }
 
 #pragma mark - population
 
 -(void)populateImageViewWithURLString:(NSString*)urlString{
     // Fetch the image
-    ImageFetcher *imageFetcher = [[ImageFetcher alloc] initWithDelegate:self];
-    [imageFetcher fetchImageAtURLPath:urlString];
-    [imageFetcher release];
+    ImageFetcher *_imageFetcher = [[ImageFetcher alloc] initWithDelegate:self];
+    [_imageFetcher fetchImageAtURLPath:urlString];
+    self.imageFetcher = _imageFetcher;
+    [_imageFetcher release];
     
     // Retain self so delegate doesn't have to.
     [self retain];

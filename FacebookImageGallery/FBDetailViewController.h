@@ -17,14 +17,14 @@ typedef enum{
     UIScrollView *scrollView;
     UITextView *textView;
     NSMutableArray *arrayOfImageViews;
-    NSArray *taggedImagesInfoArray;
     NSInteger scrollViewCenterIndex;
+    BOOL hasFinishedLoading;
 }
 
 @property (nonatomic, retain) IBOutlet UIScrollView *scrollView;
 @property (nonatomic, retain) IBOutlet UITextView *textView;
 @property (nonatomic, retain) NSMutableArray *arrayOfImageViews;
-@property (nonatomic, retain) NSArray *taggedImagesInfoArray;
 @property (nonatomic) NSInteger scrollViewCenterIndex;
+@property (nonatomic) BOOL hasFinishedLoading;
 
 @end

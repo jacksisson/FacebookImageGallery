@@ -155,4 +155,9 @@ static NSMutableArray *activeFileFetchersQueue;
     }
 }
 
+#pragma mark -stop
+-(void)stop{
+    [self release];
+}
+
 @end
