@@ -45,10 +45,10 @@
 
 #pragma mark - memory 
 -(void)dealloc{
-    [super dealloc];
     [scrollView release];
     [arrayOfImageViews release];
     [textView release];
+    [super dealloc];
 }
 
 #pragma mark - View lifecycle

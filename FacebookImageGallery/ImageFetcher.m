@@ -35,11 +35,12 @@ static NSMutableArray *activeFileFetchersQueue;
 }
 
 -(void)dealloc{
-    [super dealloc];
     [delegate release];
     [urlPath release];
 //    [pathToSaveImage release]; // This causes a bad access for some reason. 
     [urlConnection release];
+    [super dealloc];
+
 }
 
 -(void)fetchImageAtURLPath:(NSString*)_urlPath{

@@ -34,13 +34,13 @@
 }
 
 -(void)dealloc{
-    [super dealloc];
     [[NSNotificationCenter defaultCenter] removeObserver:self];
     [tableView release];
     [loadingView release];
     [failedView release];
     [tmpCell release];
     [cellNib release];
+    [super dealloc];
 }
 
 #pragma mark - View lifecycle

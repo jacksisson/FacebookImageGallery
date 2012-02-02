@@ -25,10 +25,10 @@
 }
 
 -(void)dealloc{
-    [super dealloc];
     [imageView release];
     [imageFetcher stop];
     [imageFetcher release];
+    [super dealloc];
 }
 
 #pragma mark - population

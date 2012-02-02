@@ -30,8 +30,8 @@ static FBImageInfoRequestor *sharedInstance;
 }
 
 -(void)dealloc{
-    [super dealloc];
     [taggedPhotosInfoArray release];
+    [super dealloc];
 }
 
 #pragma mark - public methods

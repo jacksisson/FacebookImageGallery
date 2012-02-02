@@ -17,11 +17,11 @@
 
 #pragma mark - memory
 -(void)dealloc{
-    [super dealloc];
     [imageView1 release];
     [imageView2 release];
     [imageView3 release];
-    [imageView4 release];
+    [imageView4 release];  
+    [super dealloc];
 }
 
 #pragma mark - methods
