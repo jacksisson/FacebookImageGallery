@@ -34,6 +34,7 @@
 @property (nonatomic, assign) id<FBImageTableViewCellDelegate> delegate;
 
 -(void)clearAllImageViews;
+-(IBAction)imageButtonPressed:(id)sender;
 
 @end
 

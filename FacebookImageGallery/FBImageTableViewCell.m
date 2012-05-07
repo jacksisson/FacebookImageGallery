@@ -32,40 +32,11 @@
     self.imageView4.image = nil;
 }
 
-#pragma mark - touches
--(void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event{
-    [super touchesBegan:touches withEvent:event];
+-(void)imageButtonPressed:(id)sender{
+    int index = ((UIButton*)sender).tag;
     
-    // Store the image view and index that are initially touched
-    CGPoint touchStartPoint = [[touches anyObject] locationInView:self];
-    if(CGRectContainsPoint(imageView1.frame, touchStartPoint)){
-        tappedImageView = imageView1;
-        tappedIndex = 0;
-    }else if(CGRectContainsPoint(imageView2.frame, touchStartPoint)){
-        tappedImageView = imageView2;
-        tappedIndex = 1;
-    }else if(CGRectContainsPoint(imageView3.frame, touchStartPoint)){
-        tappedImageView = imageView3;
-        tappedIndex = 2;
-    }else if(CGRectContainsPoint(imageView4.frame, touchStartPoint)){
-        tappedImageView = imageView4;
-        tappedIndex = 3;
-    }else{
-        tappedImageView = nil;
-    }
-}
-
--(void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event{
-    [super touchesEnded:touches withEvent:event];
-    
-    // If there was an image view that was tapped, call the delegate if the image view was
-    // "touched up inside"
-    if(!tappedImageView) return;
-    CGPoint touchEndPoint = [[touches anyObject] locationInView:self];
-    if(CGRectContainsPoint(tappedImageView.frame, touchEndPoint)){
-        if([delegate respondsToSelector:@selector(fbImageTableViewCell:didTapImageViewWithIndex:)]){
-            [delegate fbImageTableViewCell:self didTapImageViewWithIndex:cellStartingIndex + tappedIndex];
-        }
+    if([delegate respondsToSelector:@selector(fbImageTableViewCell:didTapImageViewWithIndex:)]){
+        [delegate fbImageTableViewCell:self didTapImageViewWithIndex:cellStartingIndex + index];
     }
 }
 
