@@ -12,6 +12,11 @@
 #import "FBLoginViewController.h"
 #import "FBImageInfoRequestor.h"
 
+@interface FacebookImageGalleryAppDelegate()
+-(void)presentLoginController;
+-(void)setFacebookAccessTokenInDefaults;
+@end
+
 @implementation FacebookImageGalleryAppDelegate
 
 @synthesize window;
@@ -23,7 +28,6 @@ void uncaughtExceptionHandler(NSException *exception);
 void uncaughtExceptionHandler(NSException *exception) {
     NSLog(@"CRASH: %@", exception);
     NSLog(@"Stack Trace: %@", [exception callStackSymbols]);
-    // Internal error reporting
 }
 
 
@@ -72,10 +76,7 @@ void uncaughtExceptionHandler(NSException *exception) {
         facebook.expirationDate = [defaults objectForKey:@"FBExpirationDateKey"];
     }
     if (![facebook isSessionValid]) {
-        FBLoginViewController *loginVC = [[FBLoginViewController alloc] init];
-        loginVC.delegate = self;
-        [navController presentModalViewController:loginVC animated:NO];
-        [loginVC release];
+        [self presentLoginController];
     }else{
         [[FBImageInfoRequestor sharedInstance] getFirstTaggedPhotosFromFacebook];
     }
@@ -96,11 +97,27 @@ void uncaughtExceptionHandler(NSException *exception) {
 
 #pragma mark - Facebook Session Delegate
 - (void)fbDidLogin {
-    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    [defaults setObject:[facebook accessToken] forKey:@"FBAccessTokenKey"];
-    [defaults setObject:[facebook expirationDate] forKey:@"FBExpirationDateKey"];
-    [defaults synchronize];
+    [self setFacebookAccessTokenInDefaults];
     [[FBImageInfoRequestor sharedInstance] getFirstTaggedPhotosFromFacebook];
+}
+
+- (void)fbDidLogout{
+    [self presentLoginController];
+}
+
+-(void)fbSessionInvalidated{
+    [self presentLoginController];
+}
+
+- (void)fbDidExtendToken:(NSString*)accessToken
+               expiresAt:(NSDate*)expiresAt{
+    [self setFacebookAccessTokenInDefaults];
+}
+
+- (void)fbDidNotLogin:(BOOL)cancelled{
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Log In Failed" message:@"Sorry, you must log in to use this demo." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+    [alert show];
+    [alert release];
 }
 
 #pragma mark - FBLoginDelegate
@@ -108,6 +125,21 @@ void uncaughtExceptionHandler(NSException *exception) {
     NSArray *permissions = [NSArray arrayWithObjects:@"user_photo_video_tags", nil];
     [facebook authorize:permissions];
     [navController dismissModalViewControllerAnimated:YES];
+}
+
+#pragma mark - Utility
+-(void)presentLoginController{
+    FBLoginViewController *loginVC = [[FBLoginViewController alloc] init];
+    loginVC.delegate = self;
+    [navController presentModalViewController:loginVC animated:NO];
+    [loginVC release];
+}
+
+-(void)setFacebookAccessTokenInDefaults{
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    [defaults setObject:[facebook accessToken] forKey:@"FBAccessTokenKey"];
+    [defaults setObject:[facebook expirationDate] forKey:@"FBExpirationDateKey"];
+    [defaults synchronize];
 }
 
 @end
